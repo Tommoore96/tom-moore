@@ -3,7 +3,12 @@
 export default {
   content: ['./src/**/*.{mjs,js,ts,jsx,tsx}'],
   theme: {
-    extend: {}
+    extend: {
+      fontFamily: {
+        body: ['Inconsolata', 'monospace'],
+        display: ['Karla', 'sans-serif']
+      }
+    }
   },
   plugins: []
 }
