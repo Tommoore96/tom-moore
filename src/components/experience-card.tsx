@@ -1,5 +1,6 @@
+import { DotFilledIcon } from '@radix-ui/react-icons'
 import clsx from 'clsx'
-import React, { ReactNode } from 'react'
+import React, { forwardRef, ReactNode } from 'react'
 
 export type ExperienceCardProps = {
   title: string
@@ -9,22 +10,28 @@ export type ExperienceCardProps = {
   className?: string
 }
 
-export default function ExperienceCard({
-  title,
-  company,
-  date,
-  description,
-  className
-}: ExperienceCardProps) {
-  return (
-    <div className={clsx('flex flex-col gap-3', className)}>
-      <div className="flex flex-col gap-1">
-        <h4 className="font-body text-sm">{date}</h4>
-        <h3 className="font-display text-xl font-bold">
-          {title} at {company} {date}
-        </h3>
+const ExperienceCard = forwardRef<HTMLDivElement, ExperienceCardProps>(
+  ({ title, company, date, description, className }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={clsx('relative flex flex-col gap-3', className)}
+      >
+        <div className="absolute left-[-12px] top-1/2 -translate-y-1/2">
+          <DotFilledIcon className="size-4" />
+        </div>
+        <div className="flex flex-col gap-1">
+          <h4 className="font-body text-sm">{date}</h4>
+          <h3 className="font-display text-xl font-bold">
+            {title} at {company}
+          </h3>
+        </div>
+        <div className="font-body text-sm">{description}</div>
       </div>
-      <div className="font-body text-sm">{description}</div>
-    </div>
-  )
-}
+    )
+  }
+)
+
+ExperienceCard.displayName = 'ExperienceCard'
+
+export default ExperienceCard
