@@ -21,12 +21,13 @@ function RouteComponent() {
     config: {
       tension: 220,
       friction: 20,
-      duration: 1000
+      duration: 3000
     }
   }))
   const [heightSpring, heightApi] = useSpring(() => ({
-    height: 0,
-    config: { tension: 220, friction: 20, duration: 1000 }
+    top: 0,
+    bottom: 0,
+    config: { tension: 220, friction: 20, duration: 3000 }
   }))
 
   const updateLinePosition = useCallback(() => {
@@ -34,16 +35,14 @@ function RouteComponent() {
       const firstRect = firstCardRef.current.getBoundingClientRect()
       const lastRect = lastCardRef.current.getBoundingClientRect()
 
-      const firstRectMiddle = firstRect.top + firstRect.height / 2
-      const lastRectMiddle = lastRect.top + lastRect.height / 2
-
-      const height = Math.hypot(firstRectMiddle, lastRectMiddle)
-
       setLinePosition({
         top: firstRect.height / 2,
         bottom: lastRect.height / 2
       })
-      heightApi.start({ height: lastRect.top - firstRect.top })
+      heightApi.start({
+        top: firstRect.height / 2,
+        bottom: lastRect.height / 2
+      })
     }
   }, [heightApi])
 
