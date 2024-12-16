@@ -2,8 +2,8 @@ import { createLazyFileRoute } from '@tanstack/react-router'
 import ExperienceCard from 'components/experience-card'
 import Section from 'components/section'
 import { experience, technologies } from 'data'
-import { OpenInNewWindowIcon } from '@radix-ui/react-icons'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { useSpring, animated, useScroll, easings } from 'react-spring'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -12,19 +12,54 @@ export const Route = createLazyFileRoute('/')({
 function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
-  const [linePosition, setLinePosition] = useState({ top: 0, height: 0 })
+  const [linePosition, setLinePosition] = useState({ top: 0, bottom: 0 })
+  const [showAll, setShowAll] = useState(false)
+  const { scrollYProgress } = useScroll({ immediate: true, reverse: false })
+  const [springs, api] = useSpring(() => ({
+    opacity: 0,
+    transform: 'translateY(20px)',
+    config: {
+      tension: 220,
+      friction: 20,
+      duration: 1000
+    }
+  }))
+  const [heightSpring, heightApi] = useSpring(() => ({
+    height: 0,
+    config: { tension: 220, friction: 20, duration: 1000 }
+  }))
 
-  useEffect(() => {
+  const updateLinePosition = useCallback(() => {
     if (firstCardRef.current && lastCardRef.current) {
       const firstRect = firstCardRef.current.getBoundingClientRect()
       const lastRect = lastCardRef.current.getBoundingClientRect()
 
+      const firstRectMiddle = firstRect.top + firstRect.height / 2
+      const lastRectMiddle = lastRect.top + lastRect.height / 2
+
+      const height = Math.hypot(firstRectMiddle, lastRectMiddle)
+
       setLinePosition({
         top: firstRect.height / 2,
-        height: lastRect.top - firstRect.top
+        bottom: lastRect.height / 2
       })
+      heightApi.start({ height: lastRect.top - firstRect.top })
     }
-  }, [])
+  }, [heightApi])
+
+  useEffect(() => {
+    updateLinePosition()
+    window.addEventListener('resize', updateLinePosition)
+    return () => window.removeEventListener('resize', updateLinePosition)
+  }, [updateLinePosition])
+
+  useEffect(() => {
+    if (showAll) {
+      api.start({ opacity: 1, transform: 'translateY(0px)' })
+      updateLinePosition()
+    }
+  }, [showAll, api, updateLinePosition])
+
   return (
     <div className="flex min-h-screen flex-col bg-white pb-8 md:pb-16">
       <Section className="min-h-screen">
@@ -40,52 +75,55 @@ function RouteComponent() {
           ))}
         </div>
       </Section>
-      <Section className="bg-slate-500">
-        <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
-        <p className="font-body">
-          Hi, I’m Tom Moore, a frontend developer with 6+ years of experience
-          building clean, reliable software. I specialize in React.js,
-          TypeScript, and modern web frameworks like NextJS, with additional
-          experience maintaining backend systems using Node.js.
-        </p>
-        <p className="font-body">
-          I’m passionate about delivering exceptional user experiences,
-          mentoring teams, and improving workflows. Let’s collaborate to bring
-          your vision to life!
-        </p>
-      </Section>
+      <animated.div style={{ opacity: scrollYProgress }}>
+        <Section className="bg-slate-500">
+          <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
+          <p className="font-body">
+            Hi, I’m Tom Moore, a frontend developer with 6+ years of experience
+            building clean, reliable software. I specialize in React.js,
+            TypeScript, and modern web frameworks like NextJS, with additional
+            experience maintaining backend systems using Node.js.
+          </p>
+          <p className="font-body">
+            I’m passionate about delivering exceptional user experiences,
+            mentoring teams, and improving workflows. Let’s collaborate to bring
+            your vision to life!
+          </p>
+        </Section>
+      </animated.div>
       <Section>
         <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
         <div className="relative flex flex-col gap-8">
-          <div
+          <animated.div
             className="absolute left-[-12px] w-1 bg-blue"
             style={{
               top: `${linePosition.top}px`,
-              height: `${linePosition.height}px`
+              bottom: `${linePosition.bottom}px`
             }}
-          ></div>
-          {experience.slice(0, 4).map((exp, index) => (
-            <ExperienceCard
-              key={exp.company}
-              ref={
-                index === 0
-                  ? firstCardRef
-                  : index === experience.slice(0, 4).length - 1
-                    ? lastCardRef
-                    : null
-              }
-              {...exp}
-            />
+          ></animated.div>
+          {(showAll ? experience : experience.slice(0, 4)).map((exp, index) => (
+            <animated.div key={exp.company} style={index >= 4 ? springs : {}}>
+              <ExperienceCard
+                ref={
+                  index === 0
+                    ? firstCardRef
+                    : index === (showAll ? experience.length : 4) - 1
+                      ? lastCardRef
+                      : null
+                }
+                {...exp}
+              />
+            </animated.div>
           ))}
         </div>
-        <a
-          href="public/files/CV.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1 pt-2 font-display text-lg md:self-start"
-        >
-          View full CV <OpenInNewWindowIcon className="size-4" />
-        </a>
+        {!showAll && (
+          <button
+            onClick={() => setShowAll(true)}
+            className="mt-4 self-center rounded bg-bright-pink px-4 py-2"
+          >
+            Show All
+          </button>
+        )}
       </Section>
     </div>
   )

@@ -14,11 +14,11 @@ const ExperienceCard = forwardRef<HTMLDivElement, ExperienceCardProps>(
   ({ title, company, date, description, className }, ref) => {
     return (
       <div
-        ref={ref}
         className={clsx('relative flex flex-col gap-3', className)}
+        ref={ref}
       >
         <div className="absolute left-[-12px] top-1/2 -translate-y-1/2">
-          <DotFilledIcon className="size-4" />
+          <DotFilledIcon className="-m-1 size-4 text-blue" />
         </div>
         <div className="flex flex-col gap-1">
           <h4 className="font-body text-sm">{date}</h4>
