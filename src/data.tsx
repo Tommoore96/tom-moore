@@ -20,7 +20,7 @@ export const experience: ExperienceCardProps[] = [
   {
     title: 'Senior Frontend Developer',
     company: 'Crowdcube',
-    date: '12/2022 - 10/2024',
+    date: '2022 - 2024',
     description: (
       <p>
         Led the development of a new investor portfolio, delivering a seamless
@@ -33,7 +33,7 @@ export const experience: ExperienceCardProps[] = [
   {
     title: 'Fullstack Developer',
     company: 'Koodoo',
-    date: '10/2021 - 12/2022',
+    date: '2021 - 2022',
     description: (
       <p>
         Led the creation of a shared components library, introduced modern tools
@@ -44,21 +44,9 @@ export const experience: ExperienceCardProps[] = [
     )
   },
   {
-    title: 'Frontend Developer',
-    company: 'Moneysupermarket',
-    date: '04/2021 - 12/2021',
-    description: (
-      <p>
-        Delivered flexible Vue-based microservices for CMS integration, built a
-        Node.js CLI tool for faster deployments, and rebranded the site in
-        collaboration with content teams, ensuring seamless API design.
-      </p>
-    )
-  },
-  {
     title: 'Frontend Developer (React)',
     company: 'i6 Group',
-    date: '03/2020 - 04/2021',
+    date: '2020 - 2021',
     description: (
       <p>
         Integrated React apps into a cohesive product using microfrontends,
@@ -71,7 +59,7 @@ export const experience: ExperienceCardProps[] = [
   {
     title: 'Frontend Developer (React Native)',
     company: 'School Spider',
-    date: '04/2019 - 03/2020',
+    date: '2019 - 2020',
     description: (
       <p>
         Built and deployed a parent-facing app for schools in under a year,
@@ -83,12 +71,28 @@ export const experience: ExperienceCardProps[] = [
   {
     title: 'Junior Frontend Developer',
     company: 'Picker',
-    date: '04/2018 - 04/2019',
+    date: '2018 - 2019',
     description: (
       <p>
         Boosted homepage loading speeds by over 60% with lazy loading, managed
         the web app independently during critical development phases, and
         created tools for data analysis and influencer tracking.
+      </p>
+    )
+  },
+  {
+    title: 'Full Stack Developer Student',
+    company: 'Codeworks',
+    date: '2017 - 2018',
+    description: (
+      <p>
+        Completed an intensive 12-week, full-time coding bootcamp focused on
+        modern web development. Gained expertise in JavaScript, React, Node.js,
+        and Agile methodologies through hands-on projects. Developed the ability
+        to learn new technologies independently, reinforced by 12-hour daily
+        sessions combining practical and theoretical work. This program
+        solidified my foundation in full-stack development and prepared me to
+        excel in real-world software engineering roles.
       </p>
     )
   }

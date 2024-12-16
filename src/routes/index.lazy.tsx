@@ -3,7 +3,7 @@ import ExperienceCard from 'components/experience-card'
 import Section from 'components/section'
 import { experience, technologies } from 'data'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSpring, animated, useScroll, easings } from 'react-spring'
+import { useSpring, animated, useScroll, useTransition } from 'react-spring'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -12,18 +12,23 @@ export const Route = createLazyFileRoute('/')({
 function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
-  const [linePosition, setLinePosition] = useState({ top: 0, bottom: 0 })
   const [showAll, setShowAll] = useState(false)
   const { scrollYProgress } = useScroll({ immediate: true, reverse: false })
-  const [springs, api] = useSpring(() => ({
-    opacity: 0,
-    transform: 'translateY(20px)',
-    config: {
-      tension: 220,
-      friction: 20,
-      duration: 3000
+  const opacity = scrollYProgress.to([0, 0.7], [0, 1])
+
+  const transitions = useTransition(
+    showAll ? experience : experience.slice(0, 4),
+    {
+      from: { opacity: 0, transform: 'translateY(-20px)' },
+      enter: { opacity: 1, transform: 'translateY(0px)' },
+      leave: { opacity: 0, transform: 'translateY(20px)' },
+      keys: (exp) => exp.company,
+      onChange() {
+        updateLinePosition(true)
+      }
     }
-  }))
+  )
+
   const [heightSpring, heightApi] = useSpring(() => ({
     top: 0,
     immediate: true,
@@ -32,32 +37,19 @@ function RouteComponent() {
   }))
 
   const updateLinePosition = useCallback(
-    (viewMore?: boolean) => {
-      console.log('🚀 ~ RouteComponent ~ event:', event)
+    (showAll?: boolean) => {
       if (firstCardRef.current && lastCardRef.current) {
         const firstRect = firstCardRef.current.getBoundingClientRect()
         const lastRect = lastCardRef.current.getBoundingClientRect()
 
-        const lastRectMiddle = lastRect.top + lastRect.height / 2
-        const firstRectMiddle = firstRect.top + firstRect.height / 2
-
         const distance = Math.hypot(
-          lastRectMiddle - firstRectMiddle,
+          lastRect.bottom - firstRect.top,
           lastRect.left - firstRect.left
         )
-        console.log('🚀 ~ RouteComponent ~ distance:', distance)
 
-        setLinePosition({
-          top: firstRect.height / 2,
-          bottom: lastRect.height / 2
-        })
         heightApi.start({
-          top: firstRect.height / 2,
-          /**
-           * correcting for the time it takes for the rect to be in correct position
-           */
-          height: viewMore ? distance - 20 : distance,
-          config: { duration: viewMore ? 1000 : 0 }
+          height: distance,
+          config: { duration: showAll ? 1000 : 0 }
         })
       }
     },
@@ -70,13 +62,6 @@ function RouteComponent() {
     window.addEventListener('resize', event)
     return () => window.removeEventListener('resize', event)
   }, [updateLinePosition])
-
-  useEffect(() => {
-    if (showAll) {
-      api.start({ opacity: 1, transform: 'translateY(0px)' })
-      updateLinePosition(true)
-    }
-  }, [showAll, api, updateLinePosition])
 
   return (
     <div className="flex min-h-screen flex-col bg-white pb-8 md:pb-16">
@@ -93,7 +78,7 @@ function RouteComponent() {
           ))}
         </div>
       </Section>
-      <animated.div style={{ opacity: scrollYProgress }}>
+      <animated.div style={{ opacity }}>
         <Section className="bg-slate-500">
           <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
           <p className="font-body">
@@ -109,37 +94,39 @@ function RouteComponent() {
           </p>
         </Section>
       </animated.div>
-      <Section>
-        <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
-        <div className="relative flex flex-col gap-8">
-          <animated.div
-            className="absolute left-[-12px] w-1 bg-blue"
-            style={heightSpring}
-          ></animated.div>
-          {(showAll ? experience : experience.slice(0, 4)).map((exp, index) => (
-            <animated.div key={exp.company} style={index >= 4 ? springs : {}}>
-              <ExperienceCard
-                ref={
-                  index === 0
-                    ? firstCardRef
-                    : index === (showAll ? experience.length : 4) - 1
-                      ? lastCardRef
-                      : null
-                }
-                {...exp}
-              />
-            </animated.div>
-          ))}
-        </div>
-        {!showAll && (
-          <button
-            onClick={() => setShowAll(true)}
-            className="mt-4 self-center rounded bg-bright-pink px-4 py-2"
-          >
-            Show All
-          </button>
-        )}
-      </Section>
+      <animated.div style={{ opacity }}>
+        <Section>
+          <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
+          <div className="relative flex flex-col gap-8">
+            <animated.div
+              className="absolute left-[-12px] w-1 bg-charcoal"
+              style={heightSpring}
+            ></animated.div>
+            {transitions((style, exp, _, index) => (
+              <animated.div key={exp.company} style={style}>
+                <ExperienceCard
+                  ref={
+                    index === 0
+                      ? firstCardRef
+                      : index === (showAll ? experience.length : 4) - 1
+                        ? lastCardRef
+                        : null
+                  }
+                  {...exp}
+                />
+              </animated.div>
+            ))}
+          </div>
+          {!showAll && (
+            <button
+              onClick={() => setShowAll(true)}
+              className="mt-4 self-center rounded bg-bright-pink px-4 py-2"
+            >
+              Show All
+            </button>
+          )}
+        </Section>
+      </animated.div>
     </div>
   )
 }
