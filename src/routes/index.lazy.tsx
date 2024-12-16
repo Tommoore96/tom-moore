@@ -26,36 +26,55 @@ function RouteComponent() {
   }))
   const [heightSpring, heightApi] = useSpring(() => ({
     top: 0,
-    bottom: 0,
-    config: { tension: 220, friction: 20, duration: 3000 }
+    immediate: true,
+    height: 0,
+    config: { tension: 220, friction: 20, duration: 0 }
   }))
 
-  const updateLinePosition = useCallback(() => {
-    if (firstCardRef.current && lastCardRef.current) {
-      const firstRect = firstCardRef.current.getBoundingClientRect()
-      const lastRect = lastCardRef.current.getBoundingClientRect()
+  const updateLinePosition = useCallback(
+    (viewMore?: boolean) => {
+      console.log('🚀 ~ RouteComponent ~ event:', event)
+      if (firstCardRef.current && lastCardRef.current) {
+        const firstRect = firstCardRef.current.getBoundingClientRect()
+        const lastRect = lastCardRef.current.getBoundingClientRect()
 
-      setLinePosition({
-        top: firstRect.height / 2,
-        bottom: lastRect.height / 2
-      })
-      heightApi.start({
-        top: firstRect.height / 2,
-        bottom: lastRect.height / 2
-      })
-    }
-  }, [heightApi])
+        const lastRectMiddle = lastRect.top + lastRect.height / 2
+        const firstRectMiddle = firstRect.top + firstRect.height / 2
+
+        const distance = Math.hypot(
+          lastRectMiddle - firstRectMiddle,
+          lastRect.left - firstRect.left
+        )
+        console.log('🚀 ~ RouteComponent ~ distance:', distance)
+
+        setLinePosition({
+          top: firstRect.height / 2,
+          bottom: lastRect.height / 2
+        })
+        heightApi.start({
+          top: firstRect.height / 2,
+          /**
+           * correcting for the time it takes for the rect to be in correct position
+           */
+          height: viewMore ? distance - 20 : distance,
+          config: { duration: viewMore ? 1000 : 0 }
+        })
+      }
+    },
+    [heightApi]
+  )
 
   useEffect(() => {
     updateLinePosition()
-    window.addEventListener('resize', updateLinePosition)
-    return () => window.removeEventListener('resize', updateLinePosition)
+    const event = () => updateLinePosition()
+    window.addEventListener('resize', event)
+    return () => window.removeEventListener('resize', event)
   }, [updateLinePosition])
 
   useEffect(() => {
     if (showAll) {
       api.start({ opacity: 1, transform: 'translateY(0px)' })
-      updateLinePosition()
+      updateLinePosition(true)
     }
   }, [showAll, api, updateLinePosition])
 
@@ -95,10 +114,7 @@ function RouteComponent() {
         <div className="relative flex flex-col gap-8">
           <animated.div
             className="absolute left-[-12px] w-1 bg-blue"
-            style={{
-              top: `${linePosition.top}px`,
-              bottom: `${linePosition.bottom}px`
-            }}
+            style={heightSpring}
           ></animated.div>
           {(showAll ? experience : experience.slice(0, 4)).map((exp, index) => (
             <animated.div key={exp.company} style={index >= 4 ? springs : {}}>
