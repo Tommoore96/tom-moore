@@ -14,6 +14,10 @@ function RouteComponent() {
   const lastCardRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState(false)
 
+  const handleShowAll = () => {
+    setShowAll(true)
+  }
+
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
     {
@@ -23,6 +27,11 @@ function RouteComponent() {
       keys: (exp) => exp.company,
       onChange() {
         updateLinePosition(true)
+      },
+      onRest() {
+        if (showAll && lastCardRef.current) {
+          lastCardRef.current.scrollIntoView({ behavior: 'smooth' })
+        }
       },
       trail: showAll ? 500 : 0
     }
@@ -122,7 +131,7 @@ function RouteComponent() {
           </div>
           {!showAll && (
             <button
-              onClick={() => setShowAll(true)}
+              onClick={() => handleShowAll()}
               className="mt-4 self-center rounded bg-bright-pink px-4 py-2"
             >
               Show All
