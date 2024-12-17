@@ -81,18 +81,18 @@ export const experience: ExperienceCardProps[] = [
     )
   },
   {
-    title: 'Full Stack Developer Student',
+    title: 'Full Stack Development Student',
     company: 'Codeworks',
     date: '2017 - 2018',
     description: (
       <p>
-        Completed an intensive 12-week, full-time coding bootcamp focused on
-        modern web development. Gained expertise in JavaScript, React, Node.js,
-        and Agile methodologies through hands-on projects. Developed the ability
-        to learn new technologies independently, reinforced by 12-hour daily
-        sessions combining practical and theoretical work. This program
-        solidified my foundation in full-stack development and prepared me to
-        excel in real-world software engineering roles.
+        Attended Codeworks, Europe’s most intensive coding bootcamp, where I
+        trained 12 hours a day, 6 days a week for 12 weeks. Diving straight into
+        JavaScript, React, Node.js, and Agile methodologies through hands-on
+        projects. Developed the ability to learn new technologies independently
+        through practical and theoretical work. This program solidified my
+        foundation in full-stack development and prepared me for real-world
+        software engineering roles.
       </p>
     )
   }
