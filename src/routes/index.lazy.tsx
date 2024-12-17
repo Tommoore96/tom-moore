@@ -9,6 +9,8 @@ export const Route = createLazyFileRoute('/')({
   component: RouteComponent
 })
 
+const ANIMATION_OFFSET = 20
+
 function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
@@ -21,16 +23,20 @@ function RouteComponent() {
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
     {
-      from: { opacity: 0, transform: 'translateY(-20px)' },
+      from: { opacity: 0, transform: `translateY(-${ANIMATION_OFFSET}px)` },
       enter: { opacity: 1, transform: 'translateY(0px)' },
-      leave: { opacity: 0, transform: 'translateY(20px)' },
       keys: (exp) => exp.company,
-      onChange() {
+      onStart() {
         updateLinePosition(true)
       },
-      onRest() {
+      onChange() {
         if (showAll && lastCardRef.current) {
-          lastCardRef.current.scrollIntoView({ behavior: 'smooth' })
+          const scrollToPosition =
+            lastCardRef.current.getBoundingClientRect().top +
+            window.scrollY -
+            ANIMATION_OFFSET
+
+          window.scrollTo({ top: scrollToPosition, behavior: 'smooth' })
         }
       },
       trail: showAll ? 500 : 0
