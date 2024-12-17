@@ -18,7 +18,7 @@ const ExperienceCard = forwardRef<HTMLDivElement, ExperienceCardProps>(
         ref={ref}
       >
         <div className="absolute left-[-21.5px] top-1/2 -translate-y-1/2">
-          <TriangleRightIcon className="size-6 text-charcoal" />
+          <TriangleRightIcon className="size-6 animate-fadeIn text-charcoal transition-opacity delay-700" />
         </div>
         <div className="flex flex-col gap-1">
           <h4 className="font-body text-sm">{date}</h4>

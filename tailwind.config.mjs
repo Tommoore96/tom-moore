@@ -6,8 +6,8 @@ export default {
     colors: {
       white: '#F5F5F5',
       blue: '#BCE7FD',
-      jasmine: '##FFD275',
-      charcoal: '#373F51',
+      jasmine: '#FFD275',
+      charcoal: '#36454f',
       'bright-pink': '#F56476',
       green: '#6EAF7E'
     },
@@ -15,7 +15,18 @@ export default {
       fontFamily: {
         body: ['Inconsolata', 'monospace'],
         display: ['Karla', 'sans-serif']
-      }
+      },
+      animation: {
+        fade: 'fadeOut 5s ease-in-out'
+      },
+
+      // that is actual animation
+      keyframes: (theme) => ({
+        fadeOut: {
+          '0%': { backgroundColor: theme('colors.red.300') },
+          '100%': { backgroundColor: theme('colors.transparent') }
+        }
+      })
     }
   },
   plugins: []

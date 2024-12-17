@@ -17,7 +17,7 @@ function RouteComponent() {
   const opacity = scrollYProgress.to([0, 0.7], [0, 1])
 
   const transitions = useTransition(
-    showAll ? experience : experience.slice(0, 4),
+    showAll ? experience : experience.slice(0, 3),
     {
       from: { opacity: 0, transform: 'translateY(-20px)' },
       enter: { opacity: 1, transform: 'translateY(0px)' },
@@ -99,8 +99,12 @@ function RouteComponent() {
           <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
           <div className="relative flex flex-col gap-8">
             <animated.div
-              className="absolute left-[-12px] w-1 bg-charcoal"
-              style={heightSpring}
+              className="absolute left-[-12px] w-1"
+              style={{
+                background:
+                  'linear-gradient(to bottom, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 0%, #36454f 7%, #36454f 93%, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 100%)',
+                ...heightSpring
+              }}
             ></animated.div>
             {transitions((style, exp, _, index) => (
               <animated.div key={exp.company} style={style}>
@@ -108,7 +112,7 @@ function RouteComponent() {
                   ref={
                     index === 0
                       ? firstCardRef
-                      : index === (showAll ? experience.length : 4) - 1
+                      : index === (showAll ? experience.length : 3) - 1
                         ? lastCardRef
                         : null
                   }
