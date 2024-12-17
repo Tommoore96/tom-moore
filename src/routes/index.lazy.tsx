@@ -23,7 +23,8 @@ function RouteComponent() {
       keys: (exp) => exp.company,
       onChange() {
         updateLinePosition(true)
-      }
+      },
+      trail: showAll ? 500 : 0
     }
   )
 
@@ -100,7 +101,7 @@ function RouteComponent() {
               className="absolute left-[-12px] w-1"
               style={{
                 background:
-                  'linear-gradient(to bottom, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 0%, #36454f 7%, #36454f 93%, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 100%)',
+                  'linear-gradient(to bottom, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 0%, var(--color-charcoal) 7%, var(--color-charcoal) 93%, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 100%)',
                 ...heightSpring
               }}
             ></animated.div>
