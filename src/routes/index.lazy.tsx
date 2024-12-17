@@ -16,10 +16,6 @@ function RouteComponent() {
   const lastCardRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState(false)
 
-  const handleShowAll = () => {
-    setShowAll(true)
-  }
-
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
     {
@@ -71,7 +67,10 @@ function RouteComponent() {
   )
 
   useEffect(() => {
-    updateLinePosition()
+    updateLinePosition(showAll)
+  }, [showAll, updateLinePosition])
+
+  useEffect(() => {
     const event = () => updateLinePosition()
     window.addEventListener('resize', event)
     return () => window.removeEventListener('resize', event)
@@ -136,14 +135,12 @@ function RouteComponent() {
                 </animated.div>
               ))}
             </div>
-            {!showAll && (
-              <button
-                onClick={() => handleShowAll()}
-                className="mt-4 self-center rounded bg-bright-pink px-4 py-2"
-              >
-                Show All
-              </button>
-            )}
+            <button
+              onClick={() => setShowAll((showAll) => !showAll)}
+              className="mt-4 self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine"
+            >
+              {showAll ? 'Show less' : 'Show more'}
+            </button>
           </Section>
         </animated.div>
       </div>
