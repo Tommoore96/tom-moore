@@ -3,7 +3,7 @@ import ExperienceCard from 'components/experience-card'
 import Section from 'components/section'
 import { experience, technologies } from 'data'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useSpring, animated, useScroll, useTransition } from 'react-spring'
+import { useSpring, animated, useTransition } from 'react-spring'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -13,8 +13,6 @@ function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState(false)
-  const { scrollYProgress } = useScroll({ immediate: true, reverse: false })
-  const opacity = scrollYProgress.to([0, 0.7], [0, 1])
 
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
@@ -78,7 +76,7 @@ function RouteComponent() {
           ))}
         </div>
       </Section>
-      <animated.div style={{ opacity }}>
+      <animated.div>
         <Section className="bg-slate-500">
           <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
           <p className="font-body">
@@ -94,7 +92,7 @@ function RouteComponent() {
           </p>
         </Section>
       </animated.div>
-      <animated.div style={{ opacity }}>
+      <animated.div>
         <Section>
           <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
           <div className="relative flex flex-col gap-8">
