@@ -26,7 +26,7 @@ function RouteComponent() {
       onStart() {
         updateLinePosition(true)
       },
-      onChange() {
+      onRest() {
         if (showAll && lastCardRef.current) {
           const scrollToPosition =
             lastCardRef.current.getBoundingClientRect().top +
@@ -48,7 +48,7 @@ function RouteComponent() {
   }))
 
   const updateLinePosition = useCallback(
-    debounce((showAll?: boolean) => {
+    (showAll?: boolean) => {
       if (firstCardRef.current && lastCardRef.current) {
         const firstRect = firstCardRef.current.getBoundingClientRect()
         const lastRect = lastCardRef.current.getBoundingClientRect()
@@ -63,7 +63,7 @@ function RouteComponent() {
           config: { duration: showAll ? 1000 : 0 }
         })
       }
-    }, 100),
+    },
     [heightApi]
   )
 
