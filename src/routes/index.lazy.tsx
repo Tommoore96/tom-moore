@@ -4,6 +4,7 @@ import Section from 'components/section'
 import { experience, technologies } from 'data'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSpring, animated, useTransition } from 'react-spring'
+import debounce from 'lodash.debounce'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -28,7 +29,7 @@ function RouteComponent() {
       onChange() {
         if (showAll && lastCardRef.current) {
           const scrollToPosition =
-            lastCardRef.current.getBoundingClientRect().bottom +
+            lastCardRef.current.getBoundingClientRect().top +
             window.scrollY -
             ANIMATION_OFFSET
 
@@ -47,7 +48,7 @@ function RouteComponent() {
   }))
 
   const updateLinePosition = useCallback(
-    (showAll?: boolean) => {
+    debounce((showAll?: boolean) => {
       if (firstCardRef.current && lastCardRef.current) {
         const firstRect = firstCardRef.current.getBoundingClientRect()
         const lastRect = lastCardRef.current.getBoundingClientRect()
@@ -62,7 +63,7 @@ function RouteComponent() {
           config: { duration: showAll ? 1000 : 0 }
         })
       }
-    },
+    }, 100),
     [heightApi]
   )
 
