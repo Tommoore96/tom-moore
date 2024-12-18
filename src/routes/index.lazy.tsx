@@ -28,7 +28,7 @@ function RouteComponent() {
       onChange() {
         if (showAll && lastCardRef.current) {
           const scrollToPosition =
-            lastCardRef.current.getBoundingClientRect().top +
+            lastCardRef.current.getBoundingClientRect().bottom +
             window.scrollY -
             ANIMATION_OFFSET
 
