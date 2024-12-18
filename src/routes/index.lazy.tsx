@@ -4,7 +4,6 @@ import Section from 'components/section'
 import { experience, technologies } from 'data'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSpring, animated, useTransition } from 'react-spring'
-import debounce from 'lodash.debounce'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -32,12 +31,12 @@ function RouteComponent() {
       },
       onChange() {
         if (showAll && lastCardRef.current) {
-          const scrollToPosition =
-            lastCardRef.current.getBoundingClientRect().top +
-            window.scrollY -
-            ANIMATION_OFFSET
-
-          window.scrollTo({ top: scrollToPosition, behavior: 'smooth' })
+          if (lastCardRef.current) {
+            lastCardRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            })
+          }
         }
       },
       trail: showAll ? 500 : 0
@@ -98,7 +97,7 @@ function RouteComponent() {
           </div>
         </Section>
         <animated.div>
-          <Section className="bg-slate-500">
+          <Section>
             <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
             <p className="font-body">
               Hi, I’m Tom Moore, a frontend developer with 6+ years of
