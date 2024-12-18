@@ -26,24 +26,15 @@ function RouteComponent() {
       onStart() {
         updateLinePosition(true)
       },
-      onRest() {
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-          if (lastCardRef.current) {
-            lastCardRef.current.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            })
-          }
-        }
+      onDestroyed() {
+        updateLinePosition(true)
       },
       onChange() {
-        if (/iPhone|iPad|iPod/i.test(navigator.userAgent) === false) {
-          if (showAll && lastCardRef.current) {
-            lastCardRef.current.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            })
-          }
+        if (showAll && lastCardRef.current) {
+          lastCardRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          })
         }
       },
       trail: 500
@@ -160,6 +151,7 @@ function RouteComponent() {
                 </animated.div>
               ))}
             </div>
+
             <button
               onClick={() => handleShowAllToggle()}
               className="mt-4 self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine"
