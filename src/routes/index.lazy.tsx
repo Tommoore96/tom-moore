@@ -16,6 +16,10 @@ function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState(false)
+  console.log(
+    '🚀 ~ RouteComponent ~ lastCardRef:',
+    lastCardRef.current?.getBoundingClientRect().top
+  )
 
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
@@ -26,7 +30,7 @@ function RouteComponent() {
       onStart() {
         updateLinePosition(true)
       },
-      onRest() {
+      onChange() {
         if (showAll && lastCardRef.current) {
           const scrollToPosition =
             lastCardRef.current.getBoundingClientRect().top +
@@ -120,7 +124,7 @@ function RouteComponent() {
                     'linear-gradient(to bottom, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 0%, var(--color-charcoal) 7%, var(--color-charcoal) 93%, rgb(245 245 245 / var(--tw-bg-opacity, 1)) 100%)',
                   ...heightSpring
                 }}
-              ></animated.div>
+              />
               {transitions((style, exp, _, index) => (
                 <animated.div key={exp.company} style={style}>
                   <ExperienceCard
