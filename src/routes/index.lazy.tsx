@@ -15,23 +15,29 @@ function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState(false)
-  console.log(
-    '🚀 ~ RouteComponent ~ lastCardRef:',
-    lastCardRef.current?.getBoundingClientRect().top
-  )
 
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
     {
       from: { opacity: 0, transform: `translateY(-${ANIMATION_OFFSET}px)` },
       enter: { opacity: 1, transform: 'translateY(0px)' },
+      leave: { opacity: 0, transform: `translateY(${ANIMATION_OFFSET}px)` },
       keys: (exp) => exp.company,
       onStart() {
         updateLinePosition(true)
       },
       onChange() {
         if (showAll && lastCardRef.current) {
-          if (lastCardRef.current) {
+          if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            setTimeout(() => {
+              if (lastCardRef.current) {
+                lastCardRef.current.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                })
+              }
+            }, 900)
+          } else {
             lastCardRef.current.scrollIntoView({
               behavior: 'smooth',
               block: 'start'
@@ -39,7 +45,7 @@ function RouteComponent() {
           }
         }
       },
-      trail: showAll ? 500 : 0
+      trail: 500
     }
   )
 
@@ -79,6 +85,29 @@ function RouteComponent() {
     window.addEventListener('resize', event)
     return () => window.removeEventListener('resize', event)
   }, [updateLinePosition])
+
+  const handleShowAllToggle = () => {
+    setShowAll((prevShowAll) => {
+      if (prevShowAll && firstCardRef.current) {
+        // Force layout reflow
+        // firstCardRef.current.offsetHeight
+
+        // Wait for the DOM to settle
+        // requestAnimationFrame(() => {
+        const scrollToPosition =
+          window.scrollY +
+          firstCardRef.current.getBoundingClientRect().top -
+          ANIMATION_OFFSET
+
+        window.scrollTo({
+          top: scrollToPosition,
+          behavior: 'smooth'
+        })
+        // })
+      }
+      return !prevShowAll
+    })
+  }
 
   return (
     <div className="flex min-h-screen justify-center bg-white pb-8 md:pb-16">
@@ -140,7 +169,7 @@ function RouteComponent() {
               ))}
             </div>
             <button
-              onClick={() => setShowAll((showAll) => !showAll)}
+              onClick={() => handleShowAllToggle()}
               className="mt-4 self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine"
             >
               {showAll ? 'Show less' : 'Show more'}
