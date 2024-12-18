@@ -77,23 +77,14 @@ function RouteComponent() {
   )
 
   useEffect(() => {
-    updateLinePosition(showAll)
-  }, [showAll, updateLinePosition])
-
-  useEffect(() => {
     const event = () => updateLinePosition()
     window.addEventListener('resize', event)
     return () => window.removeEventListener('resize', event)
   }, [updateLinePosition])
 
-  const handleShowAllToggle = () => {
+  const handleShowAllToggle = useCallback(() => {
     setShowAll((prevShowAll) => {
       if (prevShowAll && firstCardRef.current) {
-        // Force layout reflow
-        // firstCardRef.current.offsetHeight
-
-        // Wait for the DOM to settle
-        // requestAnimationFrame(() => {
         const scrollToPosition =
           window.scrollY +
           firstCardRef.current.getBoundingClientRect().top -
@@ -103,11 +94,11 @@ function RouteComponent() {
           top: scrollToPosition,
           behavior: 'smooth'
         })
-        // })
       }
+      updateLinePosition(showAll)
       return !prevShowAll
     })
-  }
+  }, [showAll, updateLinePosition])
 
   return (
     <div className="flex min-h-screen justify-center bg-white pb-8 md:pb-16">
