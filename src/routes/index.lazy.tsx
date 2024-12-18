@@ -26,18 +26,19 @@ function RouteComponent() {
       onStart() {
         updateLinePosition(true)
       },
+      onRest() {
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          if (lastCardRef.current) {
+            lastCardRef.current.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            })
+          }
+        }
+      },
       onChange() {
-        if (showAll && lastCardRef.current) {
-          if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            setTimeout(() => {
-              if (lastCardRef.current) {
-                lastCardRef.current.scrollIntoView({
-                  behavior: 'smooth',
-                  block: 'start'
-                })
-              }
-            }, 900)
-          } else {
+        if (/iPhone|iPad|iPod/i.test(navigator.userAgent) === false) {
+          if (showAll && lastCardRef.current) {
             lastCardRef.current.scrollIntoView({
               behavior: 'smooth',
               block: 'start'
