@@ -1,14 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
-import ExperienceCard from '../components/experience-card'
-import Section from '../components/section'
-import { experience, technologies } from '../data'
+import ExperienceCard from 'components/experience-card'
+import Section from 'components/section'
+import { experience, technologies } from 'data'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSpring, animated, useTransition } from 'react-spring'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { contactSchema, ContactSchema } from '../forms/schemas'
+import { contactSchema, ContactSchema } from 'forms/schemas'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -33,7 +33,7 @@ function RouteComponent() {
 
   const contactMe = useMutation({
     mutationFn: (formData: ContactSchema) =>
-      fetch('/api', { method: 'POST', body: JSON.stringify(formData) })
+      fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) })
   })
 
   const onSubmit: SubmitHandler<ContactSchema> = (data) => {
