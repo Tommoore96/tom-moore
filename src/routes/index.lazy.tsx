@@ -1,9 +1,14 @@
+import { useMutation } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import ExperienceCard from 'components/experience-card'
 import Section from 'components/section'
 import { experience, technologies } from 'data'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSpring, animated, useTransition } from 'react-spring'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { contactSchema, ContactSchema } from 'forms/schemas'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -14,7 +19,26 @@ const ANIMATION_OFFSET = 20
 function RouteComponent() {
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
+  const experienceSectionRef = useRef<HTMLDivElement>(null)
+  const contactSectionRef = useRef<HTMLDivElement>(null)
   const [showAll, setShowAll] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<ContactSchema>({
+    resolver: zodResolver(contactSchema)
+  })
+
+  const contactMe = useMutation({
+    mutationFn: (formData: ContactSchema) =>
+      fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) })
+  })
+
+  const onSubmit: SubmitHandler<ContactSchema> = (data) => {
+    contactMe.mutate(data)
+  }
 
   const transitions = useTransition(
     showAll ? experience : experience.slice(0, 3),
@@ -24,19 +48,15 @@ function RouteComponent() {
       leave: { opacity: 0, transform: `translateY(${ANIMATION_OFFSET}px)` },
       keys: (exp) => exp.company,
       onStart() {
-        updateLinePosition(true)
-      },
-      onDestroyed() {
-        updateLinePosition(true)
-      },
-      onChange() {
         if (showAll && lastCardRef.current) {
           lastCardRef.current.scrollIntoView({
             behavior: 'smooth',
             block: 'start'
           })
         }
+        updateLinePosition(true)
       },
+      onChange() {},
       trail: 500
     }
   )
@@ -76,10 +96,10 @@ function RouteComponent() {
 
   const handleShowAllToggle = useCallback(() => {
     setShowAll((prevShowAll) => {
-      if (prevShowAll && firstCardRef.current) {
+      if (prevShowAll && experienceSectionRef.current) {
         const scrollToPosition =
           window.scrollY +
-          firstCardRef.current.getBoundingClientRect().top -
+          experienceSectionRef.current.getBoundingClientRect().top -
           ANIMATION_OFFSET
 
         window.scrollTo({
@@ -125,7 +145,7 @@ function RouteComponent() {
           </Section>
         </animated.div>
         <animated.div>
-          <Section>
+          <Section ref={experienceSectionRef}>
             <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
             <div className="relative flex flex-col gap-8">
               <animated.div
@@ -158,6 +178,59 @@ function RouteComponent() {
             >
               {showAll ? 'Show less' : 'Show more'}
             </button>
+          </Section>
+          <Section
+            ref={contactSectionRef}
+            className="max-w-4xl items-stretch text-left"
+          >
+            <h2 className="pt-4 font-display text-2xl font-bold">Contact me</h2>
+            <form
+              id="contact-form"
+              onSubmit={handleSubmit(onSubmit)}
+              className="relative flex flex-col gap-2"
+            >
+              <div className="flex flex-col gap-2">
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Name"
+                  {...register('name')}
+                  className="rounded border-2 border-charcoal px-4 py-2"
+                />
+                <div className="text-red">
+                  <ErrorMessage errors={errors} name="name" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  id="emailAddress"
+                  type="emailAddress"
+                  placeholder="Email"
+                  className="rounded border-2 border-charcoal px-4 py-2"
+                  {...register('emailAddress')}
+                />
+                <div className="text-red">
+                  <ErrorMessage errors={errors} name="emailAddress" />
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <textarea
+                  id="message"
+                  placeholder="Message"
+                  {...register('message')}
+                  className="h-48 rounded border-2 border-charcoal px-4 py-2"
+                />
+                <div className="text-red">
+                  <ErrorMessage errors={errors} name="message" />
+                </div>
+              </div>
+              <button
+                className="mt-4 self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine"
+                type="submit"
+              >
+                Submit
+              </button>
+            </form>
           </Section>
         </animated.div>
       </div>

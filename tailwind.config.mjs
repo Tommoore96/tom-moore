@@ -9,7 +9,8 @@ export default {
       jasmine: '#FFD275',
       charcoal: '#36454f',
       'bright-pink': '#F56476',
-      green: '#6EAF7E'
+      green: '#6EAF7E',
+      red: 'rgb(235, 28, 35)'
     },
     extend: {
       fontFamily: {

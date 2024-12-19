@@ -1,16 +1,22 @@
-import clsx from 'clsx'
 import { ReactNode } from 'react'
 
-export default function Section({
-  children,
-  className
-}: {
-  children: ReactNode
-  className?: string
-}) {
+import { forwardRef, Ref } from 'react'
+import cn from 'utils'
+
+const Section = forwardRef(function Section(
+  {
+    children,
+    className
+  }: {
+    children: ReactNode
+    className?: string
+  },
+  ref: Ref<HTMLDivElement>
+) {
   return (
     <div
-      className={clsx(
+      ref={ref}
+      className={cn(
         'flex flex-1 flex-col items-center justify-center gap-4 px-6 pb-4 md:px-11',
         className
       )}
@@ -18,4 +24,6 @@ export default function Section({
       {children}
     </div>
   )
-}
+})
+
+export default Section
