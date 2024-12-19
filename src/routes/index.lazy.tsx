@@ -9,7 +9,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { contactSchema, ContactSchema } from '../forms/schemas'
-import Loader from 'components/loader'
+import Loader from '../components/loader'
 import { toast, Toaster } from 'sonner'
 
 export const Route = createLazyFileRoute('/')({
