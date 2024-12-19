@@ -9,6 +9,8 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { contactSchema, ContactSchema } from '../forms/schemas'
+import Loader from 'components/loader'
+import { toast, Toaster } from 'sonner'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -33,7 +35,9 @@ function RouteComponent() {
 
   const contactMe = useMutation({
     mutationFn: (formData: ContactSchema) =>
-      fetch('/api', { method: 'POST', body: JSON.stringify(formData) })
+      fetch('/api', { method: 'POST', body: JSON.stringify(formData) }),
+    onSuccess: () => toast.success('Message sent successfully!'),
+    onError: () => toast.error('Failed to send message.')
   })
 
   const onSubmit: SubmitHandler<ContactSchema> = (data) => {
@@ -225,15 +229,17 @@ function RouteComponent() {
                 </div>
               </div>
               <button
-                className="mt-4 self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine"
+                className="mt-4 flex w-full items-center justify-center self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine md:w-auto md:self-start"
                 type="submit"
+                disabled={contactMe.isPending}
               >
-                Submit
+                Submit {contactMe.isPending && <Loader />}
               </button>
             </form>
           </Section>
         </animated.div>
       </div>
+      <Toaster />
     </div>
   )
 }
