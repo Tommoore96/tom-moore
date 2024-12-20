@@ -1,6 +1,7 @@
-import { contactSchema } from './forms/schemas'
+import { contactSchema } from '../../src/forms/schemas';
 import nodemailer from 'nodemailer'
-import { eventHandler, readBody } from 'vinxi/http'
+import type { Handler } from 'aws-lambda';
+
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -26,10 +27,9 @@ async function sendEmail(name: string, emailAddress: string, message: string) {
   }
 }
 
-export default eventHandler(async (event) => {
-  const body = await readBody(event)
+export const contactMe: Handler = async (event, context) => {
 
-  const parsedBody = contactSchema.safeParse(JSON.parse(body))
+  const parsedBody = contactSchema.safeParse(event.arguments)
 
   if (!parsedBody.success) {
     return new Response(JSON.stringify({ error: parsedBody.error.message }), {
@@ -48,4 +48,4 @@ export default eventHandler(async (event) => {
   } else {
     return new Response('Email failed to send', { status: 500 })
   }
-})
+}
