@@ -1,7 +1,6 @@
-import { contactSchema } from '../../src/forms/schemas';
+import { contactSchema } from '../../src/forms/schemas'
 import nodemailer from 'nodemailer'
-import type { Handler } from 'aws-lambda';
-
+import { Schema } from '../data/resource'
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -27,14 +26,13 @@ async function sendEmail(name: string, emailAddress: string, message: string) {
   }
 }
 
-export const contactMe: Handler = async (event, context) => {
-
+export const handler: Schema['contactMe']['functionHandler'] = async (
+  event
+) => {
   const parsedBody = contactSchema.safeParse(event.arguments)
 
   if (!parsedBody.success) {
-    return new Response(JSON.stringify({ error: parsedBody.error.message }), {
-      status: 400
-    })
+    return JSON.stringify({ error: parsedBody.error.message })
   }
 
   const sendEmailResponse = await sendEmail(
@@ -44,8 +42,8 @@ export const contactMe: Handler = async (event, context) => {
   )
 
   if (sendEmailResponse.accepted) {
-    return new Response('Email sent successfully', { status: 200 })
+    return 'Email sent successfully'
   } else {
-    return new Response('Email failed to send', { status: 500 })
+    return 'Email failed to send'
   }
 }
