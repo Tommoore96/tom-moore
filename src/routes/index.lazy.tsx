@@ -11,10 +11,24 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { contactSchema, ContactSchema } from '../forms/schemas'
 import Loader from '../components/loader'
 import { toast, Toaster } from 'sonner'
+import { generateClient } from 'aws-amplify/data'
+import type { Schema } from '../../amplify/data/resource'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
 })
+
+const client = generateClient<Schema>()
+
+const contactMeFetch = async (data: Schema['contactMe']['args']) => {
+  const response = await client.queries.contactMe(data)
+
+  if (response.errors) {
+    throw new Error(response.errors.toString())
+  } else {
+    return response.data
+  }
+}
 
 const ANIMATION_OFFSET = 20
 
@@ -34,10 +48,12 @@ function RouteComponent() {
   })
 
   const contactMe = useMutation({
-    mutationFn: (formData: ContactSchema) =>
-      fetch('/api', { method: 'POST', body: JSON.stringify(formData) }),
+    mutationFn: (formData: ContactSchema) => contactMeFetch(formData),
     onSuccess: () => toast.success('Message sent successfully!'),
-    onError: () => toast.error('Failed to send message.')
+    onError: (data) => {
+      toast.error('Failed to send message.')
+      console.log(data)
+    }
   })
 
   const onSubmit: SubmitHandler<ContactSchema> = (data) => {

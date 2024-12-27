@@ -11,9 +11,9 @@ const schema = a.schema({
   contactMe: a
     .query()
     .arguments({
-      name: a.string(),
-      emailAddress: a.email(),
-      message: a.string()
+      name: a.string().required(),
+      emailAddress: a.email().required(),
+      message: a.string().required()
     })
     .returns(a.string())
     .handler(a.handler.function(contactMe))
