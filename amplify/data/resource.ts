@@ -17,6 +17,7 @@ const schema = a.schema({
     })
     .returns(a.string())
     .handler(a.handler.function(contactMe))
+    .authorization((allow) => [allow.publicApiKey()])
 })
 
 export type Schema = ClientSchema<typeof schema>
