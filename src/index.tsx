@@ -1,11 +1,9 @@
 import './main.css'
+import { Amplify } from 'aws-amplify'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { Amplify } from 'aws-amplify'
 import outputs from '../amplify_outputs.json'
-
-// Import the generated route tree
 import { routeTree } from './routeTree.gen'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 

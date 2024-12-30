@@ -48,14 +48,14 @@ function RouteComponent() {
   })
 
   const contactMe = useMutation({
-    mutationFn: (formData: ContactSchema) =>
-      fetch('https://nv92eup697.execute-api.eu-north-1.amazonaws.com/prod/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      }).then((res) => res.json()),
+    mutationFn: (formData: ContactSchema) => contactMeFetch(formData),
+    // fetch('https://nv92eup697.execute-api.eu-north-1.amazonaws.com/prod/', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify(formData)
+    // }).then((res) => res.json()),
     onSuccess: () => toast.success('Message sent successfully!'),
     onError: (data) => {
       toast.error('Failed to send message.')
@@ -65,7 +65,6 @@ function RouteComponent() {
 
   const onSubmit: SubmitHandler<ContactSchema> = (data) => {
     contactMe.mutate(data)
-    contactMeFetch(data)
   }
 
   const transitions = useTransition(
