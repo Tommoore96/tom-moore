@@ -6,10 +6,14 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import outputs from '../amplify_outputs.json'
 import { routeTree } from './routeTree.gen'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { generateClient } from 'aws-amplify/data'
+import type { Schema } from '../amplify/data/resource'
 
 const queryClient = new QueryClient()
 
 Amplify.configure(outputs)
+
+export const client = generateClient<Schema>()
 
 // Create a new router instance
 const router = createRouter({
