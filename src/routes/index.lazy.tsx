@@ -1,3 +1,4 @@
+import '../amplify'
 import { useMutation } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import ExperienceCard from '../components/experience-card'
@@ -11,7 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { contactSchema, ContactSchema } from '../forms/schemas'
 import Loader from '../components/loader'
 import { toast, Toaster } from 'sonner'
-import { client } from 'index'
+import { generateClient } from 'aws-amplify/data'
+import type { Schema } from '../../amplify/data/resource'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -20,6 +22,8 @@ export const Route = createLazyFileRoute('/')({
 const ANIMATION_OFFSET = 20
 
 function RouteComponent() {
+  const client = generateClient<Schema>()
+
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
   const experienceSectionRef = useRef<HTMLDivElement>(null)
@@ -36,6 +40,7 @@ function RouteComponent() {
 
   const contactMe = useMutation({
     mutationFn: async (formData: ContactSchema) => {
+      console.log('🚀 ~ mutationFn: ~ formData:', formData)
       const response = await client.queries.contactMe(formData)
 
       if (response.errors) {
