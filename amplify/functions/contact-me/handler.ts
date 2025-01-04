@@ -1,6 +1,6 @@
-import { contactSchema } from '../../src/forms/schemas'
+import { contactSchema } from '../../../src/forms/schemas'
 import nodemailer from 'nodemailer'
-import { Schema } from '../data/resource'
+import { Schema } from '../../data/resource'
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
