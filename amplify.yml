@@ -12,6 +12,7 @@ frontend:
   phases:
     build:
       commands:
+        - echo node -v
         - npm run build
   artifacts:
     baseDirectory: dist
