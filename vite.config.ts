@@ -6,6 +6,9 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 
 // https://vitejs.dev/config https://vitest.dev/config
 export default defineConfig({
+  build: {
+    manifest: true
+  },
   plugins: [react(), tsconfigPaths(), TanStackRouterVite()],
   test: {
     globals: true,
