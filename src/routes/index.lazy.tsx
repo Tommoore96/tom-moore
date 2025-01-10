@@ -1,4 +1,3 @@
-import '../amplify'
 import { useMutation } from '@tanstack/react-query'
 import { createLazyFileRoute } from '@tanstack/react-router'
 import ExperienceCard from '../components/experience-card'
@@ -14,7 +13,6 @@ import Loader from '../components/loader'
 import { toast, Toaster } from 'sonner'
 import { generateClient } from 'aws-amplify/data'
 import type { Schema } from '../../amplify/data/resource'
-// import Send from '../send'
 
 export const Route = createLazyFileRoute('/')({
   component: RouteComponent
@@ -34,6 +32,7 @@ function RouteComponent() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm<ContactSchema>({
     resolver: zodResolver(contactSchema)
@@ -41,10 +40,7 @@ function RouteComponent() {
 
   const contactMe = useMutation({
     mutationFn: async (formData: ContactSchema) => {
-      // Send({ ...formData, from: formData.emailAddress })
-      // console.log('🚀 ~ mutationFn: ~ formData:', formData)
       const response = await client.queries.contactMe(formData)
-      console.log('🚀 ~ mutationFn: ~ response:', response)
 
       if (response.errors) {
         throw new Error(
@@ -54,10 +50,13 @@ function RouteComponent() {
         return response.data
       }
     },
-    onSuccess: () => toast.success('Message sent successfully!'),
+    onSuccess: () => {
+      toast.success('Message sent successfully!')
+      reset()
+    },
     onError: (data) => {
       toast.error('Failed to send message.')
-      console.log(data)
+      console.error(data)
     }
   })
 
