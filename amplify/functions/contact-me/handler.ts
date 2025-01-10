@@ -22,6 +22,7 @@ async function sendEmail(name: string, emailAddress: string, message: string) {
   try {
     return await transporter.sendMail(mailOptions)
   } catch (error) {
+    console.log('🚀 ~ sendEmail ~ error:', error)
     throw new Error('Failed to send email')
   }
 }

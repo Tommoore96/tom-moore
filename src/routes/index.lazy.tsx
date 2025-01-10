@@ -44,20 +44,16 @@ function RouteComponent() {
       // Send({ ...formData, from: formData.emailAddress })
       // console.log('🚀 ~ mutationFn: ~ formData:', formData)
       const response = await client.queries.contactMe(formData)
+      console.log('🚀 ~ mutationFn: ~ response:', response)
 
       if (response.errors) {
-        throw new Error(response.errors.toString())
+        throw new Error(
+          response.errors.map((error) => error.message).join(', ')
+        )
       } else {
         return response.data
       }
     },
-    // fetch('https://nv92eup697.execute-api.eu-north-1.amazonaws.com/prod/', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify(formData)
-    // }).then((res) => res.json()),
     onSuccess: () => toast.success('Message sent successfully!'),
     onError: (data) => {
       toast.error('Failed to send message.')
