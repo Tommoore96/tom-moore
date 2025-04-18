@@ -1,6 +1,4 @@
-import { ReactNode } from 'react'
-
-import { forwardRef, Ref } from 'react'
+import { forwardRef, ReactNode, Ref } from 'react'
 import cn from '../utils'
 
 const Section = forwardRef(function Section(

@@ -166,7 +166,7 @@ function RouteComponent() {
           <Section id="about">
             <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
             <p className="font-body">
-              Hi, I’m Tom Moore, a frontend developer with 6+ years of
+              Hi, I’m Tom Moore, a frontend developer with 7+ years of
               experience building clean, reliable software. I specialize in
               React.js, TypeScript, and modern web frameworks like NextJS, with
               additional experience maintaining backend systems using Node.js.
@@ -176,11 +176,16 @@ function RouteComponent() {
               mentoring teams, and improving workflows. Let’s collaborate to
               bring your vision to life!
             </p>
+            <p className="font-body">
+              Based in Manchester, UK, I’m available for remote & hybrid work.
+            </p>
           </Section>
         </animated.div>
         <animated.div>
           <Section id="experience" ref={experienceSectionRef}>
-            <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
+            <h2 className="pt-20 font-display text-2xl font-bold">
+              Experience
+            </h2>
             <div className="relative flex flex-col gap-8">
               <animated.div
                 className="absolute left-[-12px] w-1"
