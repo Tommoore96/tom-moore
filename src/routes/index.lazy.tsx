@@ -21,8 +21,6 @@ export const Route = createLazyFileRoute('/')({
 const ANIMATION_OFFSET = 20
 
 function RouteComponent() {
-  const client = generateClient<Schema>()
-
   const firstCardRef = useRef<HTMLDivElement>(null)
   const lastCardRef = useRef<HTMLDivElement>(null)
   const experienceSectionRef = useRef<HTMLDivElement>(null)
@@ -40,11 +38,19 @@ function RouteComponent() {
 
   const contactMe = useMutation({
     mutationFn: async (formData: ContactSchema) => {
-      const response = await client.queries.contactMe(formData)
+      const response = await fetch(
+        'https://tom-contact-625134485202.europe-west2.run.app',
+        {
+          method: 'POST',
+          body: JSON.stringify(formData)
+        }
+      ).then((res) => res.json())
 
       if (response.errors) {
         throw new Error(
-          response.errors.map((error) => error.message).join(', ')
+          response.errors
+            .map((error: { message: string }) => error.message)
+            .join(', ')
         )
       } else {
         return response.data
