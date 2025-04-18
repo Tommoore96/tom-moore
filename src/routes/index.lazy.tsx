@@ -141,11 +141,17 @@ function RouteComponent() {
   }, [showAll, updateLinePosition])
 
   return (
-    <div className="flex min-h-screen justify-center bg-white pb-8 md:pb-16">
+    <article
+      className="flex min-h-screen justify-center bg-white pb-8 md:pb-16"
+      itemScope
+      itemType="https://schema.org/ProfilePage"
+    >
       <div className="flex w-full max-w-4xl flex-col self-center">
         <Section className="min-h-screen">
-          <h1 className="font-display text-5xl">Senior Web Developer</h1>
-          <p className="font-body">
+          <h1 className="font-display text-5xl" itemProp="headline">
+            Senior Web Developer
+          </h1>
+          <p className="font-body" itemProp="description">
             Building clean, reliable, and modern frontend experiences.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
@@ -157,7 +163,7 @@ function RouteComponent() {
           </div>
         </Section>
         <animated.div>
-          <Section>
+          <Section id="about">
             <h2 className="pt-4 font-display text-2xl font-bold">About</h2>
             <p className="font-body">
               Hi, I’m Tom Moore, a frontend developer with 6+ years of
@@ -173,7 +179,7 @@ function RouteComponent() {
           </Section>
         </animated.div>
         <animated.div>
-          <Section ref={experienceSectionRef}>
+          <Section id="experience" ref={experienceSectionRef}>
             <h2 className="pt-4 font-display text-2xl font-bold">Experience</h2>
             <div className="relative flex flex-col gap-8">
               <animated.div
@@ -203,11 +209,14 @@ function RouteComponent() {
             <button
               onClick={() => handleShowAllToggle()}
               className="mt-4 self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine"
+              aria-expanded={showAll}
+              aria-controls="experience-list"
             >
               {showAll ? 'Show less' : 'Show more'}
             </button>
           </Section>
           <Section
+            id="contact"
             ref={contactSectionRef}
             className="max-w-4xl items-stretch text-left"
           >
@@ -216,39 +225,55 @@ function RouteComponent() {
               id="contact-form"
               onSubmit={handleSubmit(onSubmit)}
               className="relative flex flex-col gap-2"
+              aria-label="Contact form"
             >
               <div className="flex flex-col gap-2">
+                <label htmlFor="name" className="sr-only">
+                  Name
+                </label>
                 <input
                   id="name"
                   type="text"
                   placeholder="Name"
                   {...register('name')}
                   className="rounded border-2 border-charcoal px-4 py-2"
+                  aria-required="true"
+                  aria-invalid={!!errors.name}
                 />
-                <div className="text-red">
+                <div className="text-red" role="alert">
                   <ErrorMessage errors={errors} name="name" />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
+                <label htmlFor="emailAddress" className="sr-only">
+                  Email
+                </label>
                 <input
                   id="emailAddress"
-                  type="emailAddress"
+                  type="email"
                   placeholder="Email"
                   className="rounded border-2 border-charcoal px-4 py-2"
                   {...register('emailAddress')}
+                  aria-required="true"
+                  aria-invalid={!!errors.emailAddress}
                 />
-                <div className="text-red">
+                <div className="text-red" role="alert">
                   <ErrorMessage errors={errors} name="emailAddress" />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
+                <label htmlFor="message" className="sr-only">
+                  Message
+                </label>
                 <textarea
                   id="message"
                   placeholder="Message"
                   {...register('message')}
                   className="h-48 rounded border-2 border-charcoal px-4 py-2"
+                  aria-required="true"
+                  aria-invalid={!!errors.message}
                 />
-                <div className="text-red">
+                <div className="text-red" role="alert">
                   <ErrorMessage errors={errors} name="message" />
                 </div>
               </div>
@@ -256,6 +281,7 @@ function RouteComponent() {
                 className="mt-4 flex w-full items-center justify-center self-center rounded border-2 border-charcoal px-4 py-2 hover:bg-jasmine md:w-auto md:self-start"
                 type="submit"
                 disabled={contactMe.isPending}
+                aria-busy={contactMe.isPending}
               >
                 Submit {contactMe.isPending && <Loader />}
               </button>
@@ -264,6 +290,6 @@ function RouteComponent() {
         </animated.div>
       </div>
       <Toaster />
-    </div>
+    </article>
   )
 }

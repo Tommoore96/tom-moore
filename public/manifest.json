@@ -1,0 +1,16 @@
+{
+  "name": "Tom Moore - Senior Web Developer",
+  "short_name": "Tom Moore Dev",
+  "description": "Tom Moore, senior web developer specialising in React, TypeScript, and Next.js",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%22110%22>👨🏻‍💻</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
